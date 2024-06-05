@@ -60,10 +60,9 @@ public enum Rs2PrayerEnum {
     public int getLevel(){
         return level;
     }
+  
+    public int getQuickPrayerIndex(){ return quickPrayerIndex; }
 
-    public int getQuickPrayerIndex(){
-        return quickPrayerIndex;
-    }
     public @Varbit int getVarbit(){
         return pVar;
     }
