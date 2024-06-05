@@ -2,6 +2,7 @@ package net.runelite.client.plugins.microbot.util.prayer;
 
 import net.runelite.api.MenuAction;
 import net.runelite.api.Skill;
+import net.runelite.api.VarPlayer;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.util.menu.NewMenuEntry;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
@@ -65,7 +66,6 @@ public class Rs2Prayer {
     }
 
 
-
     public static boolean toggleQuickPrayer(boolean on) {
         boolean bit = Microbot.getVarbitValue(QUICK_PRAYER) == QUICK_PRAYER_ENABLED.getValue();
 
@@ -78,6 +78,8 @@ public class Rs2Prayer {
         Microbot.doInvoke(new NewMenuEntry(-1, 10485779, MenuAction.CC_OP.getId(), 1, -1, "Quick-prayers"), new Rectangle(1, 1, Microbot.getClient().getCanvasWidth(), Microbot.getClient().getCanvasHeight()));
         return true;
     }
+
+
 
     public static boolean isOutOfPrayer() {
         return Microbot.getClient().getBoostedSkillLevel(Skill.PRAYER) <= 0;

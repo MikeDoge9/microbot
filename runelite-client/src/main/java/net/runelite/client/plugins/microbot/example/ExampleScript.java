@@ -8,12 +8,16 @@ import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.shortestpath.ShortestPathPlugin;
+import net.runelite.client.plugins.microbot.util.MicrobotInventorySetup;
 import net.runelite.client.plugins.microbot.util.camera.Rs2Camera;
 import net.runelite.client.plugins.microbot.util.combat.Rs2Combat;
+import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.menu.NewMenuEntry;
 import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
+import net.runelite.client.plugins.microbot.util.prayer.Rs2Prayer;
+import net.runelite.client.plugins.microbot.util.prayer.Rs2PrayerEnum;
 import net.runelite.client.plugins.microbot.util.tabs.Rs2Tab;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
 
@@ -27,6 +31,8 @@ import static net.runelite.client.plugins.microbot.util.walker.Rs2Walker.isClose
 public class ExampleScript extends Script {
     public static double version = 1.0;
 
+    private boolean runned = false;
+
     public boolean run(ExampleConfig config) {
         Microbot.enableAutoRunOn = false;
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
@@ -35,8 +41,11 @@ public class ExampleScript extends Script {
                 if (!super.run()) return;
                 long startTime = System.currentTimeMillis();
 
-                //SCRIPT CODE COMES HERE
-                Rs2Npc.attack("man");
+                if(!runned) {
+                    Rs2Prayer.toggle(Rs2PrayerEnum.PROTECT_MAGIC);
+                    Rs2Prayer.toggle(Rs2PrayerEnum.PIETY);
+
+                }
 
                 long endTime = System.currentTimeMillis();
                 long totalTime = endTime - startTime;
