@@ -122,6 +122,10 @@ public class KotoriUtils extends Plugin {
         {
             testIsMovingHook();
         }
+
+        if(config.isPrayerFlickingTesting()) {
+            
+        }
     }
     
     @Subscribe
@@ -313,7 +317,7 @@ public class KotoriUtils extends Plugin {
 
     private void testInvokeHook()
     {
-        Prayer prayer = Prayer.THICK_SKIN;
+        Prayer prayer = Prayer.PROTECT_FROM_MAGIC;
         if (client.isPrayerActive(prayer))
         {
             deactivatePrayer(prayer);

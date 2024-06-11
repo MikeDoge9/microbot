@@ -81,4 +81,13 @@ public interface KotoriUtilsConfig extends Config
             section = testFunctions
     )
     default boolean isMovingUtilTest() { return false; }
+
+    @ConfigItem(
+            keyName = "prayerFlickTest",
+            name = "Player Flicking Test",
+            description = "This test will check if the player is moving by hooking into its path length field." +
+                    "<br>It checks if the path length is 0 or if the player's pose animation is not its idle animation.",
+            section = testFunctions
+    )
+    default boolean isPrayerFlickingTesting() { return false; }
 }

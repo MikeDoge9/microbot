@@ -7,10 +7,12 @@ import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.RuneLite;
 import net.runelite.client.callback.ClientThread;
+import net.runelite.client.plugins.microbot.Microbot;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collection;
 
 @Slf4j
@@ -279,14 +281,64 @@ public class ReflectionLibrary
 			log.error(errorMsg, e);
 		}
 	}
+
+	private static void memSearchClass() {
+		var b = Arrays.stream(client.getClass().getClasses()).filter(m -> m.getName() == invokeMenuActionClassName).findFirst().orElse(null);
+
+		var a = Arrays.stream(client.getClass().getDeclaredClasses()).filter(m -> m.getName() == invokeMenuActionClassName).findFirst().orElse(null);
+		if(a != null || b != null) {
+			System.out.println("WE FOOKING FOUND THE INVOKING CLASS");
+		}
+	}
+
+
 	
 	//Invoke Menu Action Method
 	public static void invokeMenuAction(int param0, int param1, int opcode, int identifier, int itemId, int worldViewId, String option, String target, int x, int y)
 	{
 		Class<?> clazz = getClass(invokeMenuActionClassName);
+		ReflectionLibrary.memSearchClass();
+
+		System.out.println("CLAZZ " + clazz.getName() + " --- " + clazz.getSimpleName());
+		System.out.println(clazz.getName() + "---" + clazz.getSimpleName() + "---"  + clazz.getMethods());
+
+
+
 		Method method;
 		boolean isJunkValueAByte = invokeMenuActionJunkValue < 128 && invokeMenuActionJunkValue >= -128;
-		
+
+		Method[] methods = Arrays.stream(Microbot.getClient().getClass().getDeclaredMethods())
+				.filter(m -> m.getName().contains("Menu"))
+				.toArray(Method[]::new);
+
+
+		System.out.println("Printing method names");
+		for (Method meth : clazz.getDeclaredMethods()) {
+			System.out.println(meth.getName());
+		}
+
+		System.out.println("Printing method names isDone");
+
+		Class[] classes = Microbot.getClient().getClass().getClasses();
+
+		for (Class classe : classes) {
+			if(classe.getName() == invokeMenuActionClassName) {
+				System.out.println(classe.getName() + "---" + classe.getSimpleName() + "---"  + classe.getTypeName());
+
+			}
+		}
+
+
+		Method doAction = Arrays.stream(Microbot.getClient().getClass().getDeclaredMethods())
+				.filter(m -> m.getName() == "mb")
+				.findAny()
+				.orElse(null);
+
+		if(doAction != null) {
+			System.out.println(doAction.getParameterCount() + " --- " + doAction.toString());
+
+		}
+
 		if (clazz == null)
 		{
 			return;

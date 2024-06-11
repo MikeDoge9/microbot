@@ -150,6 +150,7 @@ public class AutoBarrowsPlugin extends Plugin {
     public void onNpcSpawned(NpcSpawned event) {
         int npcId = event.getNpc().getId();
         // Id	15007745 FOUDND A TUNNEL
+
         if (isInCrypt() && Arrays.stream(BARROWS_BROTHERS_IDS).anyMatch(x -> x == npcId) && !event.getNpc().isInteracting()  && brotherToFight == TheBarrowsBrothers.fromId(npcId)) {
             recommendedPrayer = PRAYER_RECOMMENDATIONS.getOrDefault(npcId, PRAYSTYLE.OFF);
                 Rs2Npc.attack(npcId);

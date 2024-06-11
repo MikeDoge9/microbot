@@ -7,6 +7,7 @@ import net.runelite.api.Skill;
 import net.runelite.client.RuneLite;
 import net.runelite.client.plugins.microbot.pumstersreflection.ReflectionLibrary;
 import net.runelite.client.plugins.microbot.pumstersreflection.rlapi.PrayerExtended;
+import net.runelite.client.plugins.microbot.util.reflection.Rs2Reflection;
 
 public class PrayerInteractions
 {
@@ -62,7 +63,7 @@ public class PrayerInteractions
 
 		int param1 = prayerExtended.getWidgetInfoPlus().getId();
 
-		ReflectionLibrary.invokeMenuAction(-1, param1, MenuAction.CC_OP.getId(), 1, -1);
+		Rs2Reflection.invokeMenuAction(-1, param1, MenuAction.CC_OP.getId(), 1, -1);
 		return true;
 	}
 	
@@ -111,7 +112,7 @@ public class PrayerInteractions
 			
 		int param1 = prayerExtended.getWidgetInfoPlus().getId();
 			
-		ReflectionLibrary.invokeMenuAction(-1, param1, MenuAction.CC_OP.getId(), 1, -1);
+		Rs2Reflection.invokeMenuAction(-1, param1, MenuAction.CC_OP.getId(), 1, -1);
 		return true;
 	}
 	
