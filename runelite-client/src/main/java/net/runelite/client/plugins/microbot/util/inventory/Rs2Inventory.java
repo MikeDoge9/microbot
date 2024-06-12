@@ -19,6 +19,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -420,7 +421,13 @@ public class Rs2Inventory {
      * @return True if all non-matching items were successfully dropped, false otherwise.
      */
     public static boolean dropAllExcept(String... names) {
+        return dropAllExcept(false, names);
+    }
+    public static boolean dropAllExcept(boolean exact ,String... names) {
+       if(exact)
         return dropAll(x -> Arrays.stream(names).noneMatch(name -> name.equalsIgnoreCase(x.name)));
+         else
+              return dropAll(x -> Arrays.stream(names).noneMatch(name -> x.name.toLowerCase().contains(name.toLowerCase())));
     }
 
     /**
@@ -716,6 +723,19 @@ public class Rs2Inventory {
     public static List<Rs2Item> getPotions() {
         return items().stream()
                 .filter(x -> Arrays.stream(x.getInventoryActions()).anyMatch(a -> a != null && a.equalsIgnoreCase("drink")))
+                .collect(Collectors.toList());
+    }
+
+    // get bones with the action "bury"
+    public static List<Rs2Item> getBones() {
+        return items().stream()
+                .filter(x -> Arrays.stream(x.inventoryActions).anyMatch(a -> a != null && a.equalsIgnoreCase("bury")))
+                .collect(Collectors.toList());
+    }
+    // get items with the action "scatter"
+    public static List<Rs2Item> getAshes() {
+        return items().stream()
+                .filter(x -> Arrays.stream(x.inventoryActions).anyMatch(a -> a != null && a.equalsIgnoreCase("scatter")))
                 .collect(Collectors.toList());
     }
 
@@ -1540,12 +1560,12 @@ public class Rs2Inventory {
                     break;
                 }
             }
+            if((Objects.equals(actions[1], "Wear") && actions[0]==null) || action.equalsIgnoreCase("drop") || action.equalsIgnoreCase("empty") || action.equalsIgnoreCase("check")){
+                identifier++;
+            }
         }
 
         param0 = rs2Item.slot;
-        if (action.equalsIgnoreCase("drop") || action.equalsIgnoreCase("empty") || action.equalsIgnoreCase("check")) {
-            identifier++;
-        }
         if (Rs2Bank.isOpen()) {
             if (action.equalsIgnoreCase("eat")) {
                 identifier += 7;
