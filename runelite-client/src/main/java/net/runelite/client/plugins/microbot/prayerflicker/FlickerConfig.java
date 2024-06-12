@@ -28,4 +28,15 @@ public interface FlickerConfig extends Config {
     {
         return true;
     }
+
+    @ConfigItem(
+            keyName = "Reflection",
+            name = "Use reflection",
+            description = "Enable this if you want to use reflection (Ban rate not tested)",
+            position = 2
+    )
+    default boolean useReflection()
+    {
+        return true;
+    }
 }

@@ -11,6 +11,8 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.util.combat.Rs2Combat;
 import net.runelite.client.plugins.microbot.util.prayer.Rs2Prayer;
+import net.runelite.client.plugins.microbot.util.reflection.Rs2Reflection;
+import net.runelite.client.plugins.microbot.util.reflection.api.Rs2ReflectionPrayer;
 import net.runelite.client.ui.overlay.OverlayManager;
 
 import javax.inject.Inject;
@@ -70,11 +72,21 @@ public class FlickerPlugin extends Plugin {
                 clientThread.invoke(() -> {
                     if(config.inCombatOnly()) {
                         if(Rs2Combat.inCombat()) {
-                            Rs2Prayer.toggleQuickPrayer(false);
+                            if (config.useReflection()) {
+                                Rs2ReflectionPrayer.toggleQuickPrayer(true);
+                            } else {
+                                Rs2Prayer.toggleQuickPrayer(false);
+                            }
 
                         }
                     } else {
-                        Rs2Prayer.toggleQuickPrayer(false);
+                        if (config.useReflection()) {
+                            Rs2ReflectionPrayer.toggleQuickPrayer(false);
+
+                        } else {
+                            Rs2Prayer.toggleQuickPrayer(false);
+
+                        }
                     }
 
                 });
@@ -86,11 +98,22 @@ public class FlickerPlugin extends Plugin {
                 clientThread.invoke(() -> {
                     if(config.inCombatOnly()) {
                         if(Rs2Combat.inCombat()) {
-                            Rs2Prayer.toggleQuickPrayer(true);
+                            if(config.useReflection()) {
+                                Rs2ReflectionPrayer.toggleQuickPrayer(true);
+
+                            } else {
+                                Rs2Prayer.toggleQuickPrayer(true);
+                            }
+
 
                         }
                     } else {
-                        Rs2Prayer.toggleQuickPrayer(true);
+                        if(config.useReflection()) {
+                            Rs2ReflectionPrayer.toggleQuickPrayer(true);
+                        } else {
+                            Rs2Prayer.toggleQuickPrayer(true);
+
+                        }
                     }
 
 

@@ -24,7 +24,7 @@ import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.mouse.VirtualMouse;
 import net.runelite.client.plugins.microbot.util.npc.Rs2NpcManager;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
-import net.runelite.client.plugins.microbot.util.reflection.Rs2Reflection;
+import net.runelite.client.plugins.microbot.util.reflection.Rs2LegacyReflection;
 import net.runelite.client.plugins.microbot.util.shop.Rs2Shop;
 import net.runelite.client.plugins.microbot.util.tile.Rs2Tile;
 import net.runelite.client.ui.ClientToolbar;
@@ -167,7 +167,7 @@ public class MicrobotPlugin extends Plugin {
 
             if (Microbot.targetMenu.getItemId() > 0) {
                 try {
-                    Rs2Reflection.setItemId(entry, Microbot.targetMenu.getItemId());
+                    Rs2LegacyReflection.setItemId(entry, Microbot.targetMenu.getItemId());
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     System.out.println(e.getMessage());
                 }

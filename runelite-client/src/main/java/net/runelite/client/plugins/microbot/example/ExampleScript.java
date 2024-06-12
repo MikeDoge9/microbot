@@ -7,6 +7,7 @@ import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
+import net.runelite.client.plugins.microbot.pumstersreflection.methods.InventoryInteractions;
 import net.runelite.client.plugins.microbot.shortestpath.ShortestPathPlugin;
 import net.runelite.client.plugins.microbot.util.MicrobotInventorySetup;
 import net.runelite.client.plugins.microbot.util.camera.Rs2Camera;
@@ -24,6 +25,7 @@ import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
 import java.awt.*;
 import java.util.concurrent.TimeUnit;
 
+import static net.runelite.client.plugins.microbot.util.Global.sleepUntil;
 import static net.runelite.client.plugins.microbot.util.camera.Rs2Camera.isTileOnScreen;
 import static net.runelite.client.plugins.microbot.util.walker.Rs2Walker.isCloseToRegion;
 
@@ -42,8 +44,13 @@ public class ExampleScript extends Script {
                 long startTime = System.currentTimeMillis();
 
                 if(!runned) {
-                    Rs2Prayer.toggle(Rs2PrayerEnum.PROTECT_MAGIC);
-                    Rs2Prayer.toggle(Rs2PrayerEnum.PIETY);
+                    InventoryInteractions.equipItems(new int[] {12926, 4942,4947});
+                    Rs2Inventory.wield(12926); // Blowpipe
+                    sleepUntil(() -> Rs2Equipment.isWearing(12926));
+                    Rs2Inventory.wield(4942); // Tassests
+                    sleepUntil(() -> Rs2Equipment.isWearing(4942));
+                    Rs2Inventory.wield(4947); // Chestplate
+                    sleepUntil(() -> Rs2Equipment.isWearing(4947));
 
                 }
 
