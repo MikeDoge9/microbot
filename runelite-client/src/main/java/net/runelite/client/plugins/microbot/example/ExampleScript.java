@@ -2,6 +2,11 @@ package net.runelite.client.plugins.microbot.example;
 
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
+import net.runelite.client.plugins.microbot.pumstersreflection.methods.InventoryInteractions;
+import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
+import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
+
+import java.util.concurrent.TimeUnit;
 
 public class ExampleScript extends Script {
     public static double version = 1.0;

@@ -2,7 +2,6 @@ package net.runelite.client.plugins.microbot.bossassist;
 
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.bossassist.models.PRAY_MODE;
-import net.runelite.client.plugins.microbot.derangedarchaeologist.DerangedAchaeologistPlugin;
 import net.runelite.client.ui.overlay.OverlayPanel;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.components.LineComponent;

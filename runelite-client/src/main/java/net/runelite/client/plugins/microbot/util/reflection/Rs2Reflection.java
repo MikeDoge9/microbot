@@ -1,18 +1,16 @@
 package net.runelite.client.plugins.microbot.util.reflection;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.runelite.api.Client;
 import net.runelite.client.RuneLite;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.plugins.microbot.Microbot;
-import net.runelite.client.plugins.microbot.util.keyboard.Rs2Keyboard;
-import net.runelite.client.plugins.microbot.util.magic.Rs2Spells;
-import net.runelite.client.plugins.microbot.util.math.Random;
-import net.runelite.client.plugins.microbot.util.reflection.utils.Rs2ReflectionUtils;
 
-import java.awt.event.KeyEvent;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Vector;
 
 import static net.runelite.client.plugins.microbot.util.reflection.utils.Rs2ReflectionUtils.sendGameErrorMessage;
 
@@ -20,9 +18,43 @@ public class Rs2Reflection {
 
     private final static Client client = RuneLite.getInjector().getInstance(Client.class);
     private final static ClientThread clientThread = RuneLite.getInjector().getInstance(ClientThread.class);
-    private static final String MENU_CLASS_NAME = "el";
-    private static final String MENU_METHOD_NAME = "mb";
+    @Getter
+    @Setter
+    private static String MENU_CLASS_NAME = "el";
+    @Getter
+    @Setter
+    private static String MENU_METHOD_NAME = "mb";
 
+
+    public static void initReflection () throws NoSuchFieldException, IllegalAccessException {
+        // Credits to EthansAPI
+        Field classes = ClassLoader.class.getDeclaredField("classes");
+        classes.setAccessible(true);
+        ClassLoader classLoader = client.getClass().getClassLoader();
+        Vector<Class<?>> classesVector = (Vector<Class<?>>) classes.get(classLoader);
+        Class<?>[] params = new Class[]{int.class, int.class, int.class, int.class, int.class, int.class, String.class, String.class, int.class, int.class};
+        for (Class<?> aClass : classesVector) {
+            for (Method declaredMethod : aClass.getDeclaredMethods()) {
+                if (declaredMethod.getParameterCount() != 11) {
+                    continue;
+                }
+                if (declaredMethod.getReturnType() != void.class) {
+                    continue;
+                }
+                if (!Arrays.equals(Arrays.copyOfRange(declaredMethod.getParameterTypes(), 0, 10), params)) {
+                    continue;
+                }
+                MENU_CLASS_NAME = aClass.getSimpleName();
+                MENU_METHOD_NAME = declaredMethod.getName();
+            }
+        }
+
+    }
+
+    public static void logClassNames () {
+        System.out.println("Current decrypted class name: " + MENU_CLASS_NAME);
+        System.out.println("Current decrypted method name: " + MENU_METHOD_NAME);
+    }
 
     private static Class<?> getClass(String className)
     {
@@ -89,9 +121,7 @@ public class Rs2Reflection {
         clientThread.invoke(() -> {
             try {
                 method.setAccessible(true);
-
                 method.invoke(null, param0, param1, opcode, identifier, itemId, worldViewId, option, target, x, y, (byte) 25);
-
                 method.setAccessible(false);
             }
             catch (Exception e)
