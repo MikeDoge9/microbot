@@ -2,10 +2,8 @@ package net.runelite.client.plugins.microbot.util.menu;
 
 import net.runelite.api.*;
 import net.runelite.api.widgets.Widget;
-import net.runelite.client.plugins.microbot.util.reflection.Rs2Reflection;
 
 import javax.annotation.Nullable;
-import java.lang.reflect.InvocationTargetException;
 import java.util.function.Consumer;
 
 public class NewMenuEntry implements MenuEntry {
@@ -29,16 +27,6 @@ public class NewMenuEntry implements MenuEntry {
         this.itemId = itemId;
     }
 
-    public NewMenuEntry(String option, String target, int identifier, MenuAction type, int param0, int param1, boolean forceLeftClick) {
-        this.option = option;
-        this.target = target;
-        this.identifier = identifier;
-        this.type = type;
-        this.param0 = param0;
-        this.param1 = param1;
-        this.forceLeftClick = forceLeftClick;
-    }
-
     public NewMenuEntry(String option, int param0, int param1, int opcode, int identifier, int itemId, String target) {
         this.option = option;
         this.target = target;
@@ -48,6 +36,17 @@ public class NewMenuEntry implements MenuEntry {
         this.param1 = param1;
         this.forceLeftClick = true;
         this.itemId = itemId;
+    }
+
+
+    public NewMenuEntry(String option, String target, int identifier, MenuAction type, int param0, int param1, boolean forceLeftClick) {
+        this.option = option;
+        this.target = target;
+        this.identifier = identifier;
+        this.type = type;
+        this.param0 = param0;
+        this.param1 = param1;
+        this.forceLeftClick = forceLeftClick;
     }
 
     public String getOption() {
