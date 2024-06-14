@@ -21,17 +21,6 @@ public class ExampleScript extends Script {
                 if (!super.run()) return;
                 long startTime = System.currentTimeMillis();
 
-                if(!runned) {
-                    InventoryInteractions.equipItems(new int[] {12926, 4942,4947});
-                    Rs2Inventory.wield(12926); // Blowpipe
-                    sleepUntil(() -> Rs2Equipment.isWearing(12926));
-                    Rs2Inventory.wield(4942); // Tassests
-                    sleepUntil(() -> Rs2Equipment.isWearing(4942));
-                    Rs2Inventory.wield(4947); // Chestplate
-                    sleepUntil(() -> Rs2Equipment.isWearing(4947));
-
-                }
-
                 long endTime = System.currentTimeMillis();
                 long totalTime = endTime - startTime;
                 System.out.println("Total time for loop " + totalTime);
