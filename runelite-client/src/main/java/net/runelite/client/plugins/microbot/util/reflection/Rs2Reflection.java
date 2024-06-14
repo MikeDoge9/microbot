@@ -1,146 +1,148 @@
 package net.runelite.client.plugins.microbot.util.reflection;
 
-import lombok.SneakyThrows;
-import net.runelite.api.ItemComposition;
-import net.runelite.api.MenuEntry;
-import net.runelite.api.NPC;
-import net.runelite.api.ObjectID;
+import lombok.Getter;
+import lombok.Setter;
+import net.runelite.api.Client;
+import net.runelite.client.RuneLite;
+import net.runelite.client.callback.ClientThread;
 import net.runelite.client.plugins.microbot.Microbot;
-import net.runelite.client.plugins.microbot.util.keyboard.Rs2Keyboard;
-import net.runelite.client.plugins.microbot.util.math.Random;
 
-import java.awt.event.KeyEvent;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Vector;
+
+import static net.runelite.client.plugins.microbot.util.reflection.utils.Rs2ReflectionUtils.sendGameErrorMessage;
 
 public class Rs2Reflection {
-    static String animationField = null;
-    static Method doAction = null;
 
-    @SneakyThrows
-    public static int getAnimation(NPC npc) {
-        if (npc == null) {
-            return -1;
-        }
-        if (animationField == null) {
-            for (Field declaredField : npc.getClass().getSuperclass().getDeclaredFields()) {
-                if (declaredField == null) {
+    private final static Client client = RuneLite.getInjector().getInstance(Client.class);
+    private final static ClientThread clientThread = RuneLite.getInjector().getInstance(ClientThread.class);
+    @Getter
+    @Setter
+    private static String MENU_CLASS_NAME = "el";
+    @Getter
+    @Setter
+    private static String MENU_METHOD_NAME = "mb";
+
+
+    public static void initReflection () throws NoSuchFieldException, IllegalAccessException {
+        // Credits to EthansAPI
+        Field classes = ClassLoader.class.getDeclaredField("classes");
+        classes.setAccessible(true);
+        ClassLoader classLoader = client.getClass().getClassLoader();
+        Vector<Class<?>> classesVector = (Vector<Class<?>>) classes.get(classLoader);
+        Class<?>[] params = new Class[]{int.class, int.class, int.class, int.class, int.class, int.class, String.class, String.class, int.class, int.class};
+        for (Class<?> aClass : classesVector) {
+            for (Method declaredMethod : aClass.getDeclaredMethods()) {
+                if (declaredMethod.getParameterCount() != 11) {
                     continue;
                 }
-                declaredField.setAccessible(true);
-                if (declaredField.getType() != int.class) {
+                if (declaredMethod.getReturnType() != void.class) {
                     continue;
                 }
-                if (Modifier.isFinal(declaredField.getModifiers())) {
+                if (!Arrays.equals(Arrays.copyOfRange(declaredMethod.getParameterTypes(), 0, 10), params)) {
                     continue;
                 }
-                if (Modifier.isStatic(declaredField.getModifiers())) {
-                    continue;
-                }
-                int value = declaredField.getInt(npc);
-                declaredField.setInt(npc, 4795789);
-                if (npc.getAnimation() == 1049413981 * 4795789) {
-                    animationField = declaredField.getName();
-                    declaredField.setInt(npc, value);
-                    declaredField.setAccessible(false);
-                    break;
-                }
-                declaredField.setInt(npc, value);
-                declaredField.setAccessible(false);
-            }
-        }
-        if (animationField == null) {
-            return -1;
-        }
-        Field animation = npc.getClass().getSuperclass().getDeclaredField(animationField);
-        animation.setAccessible(true);
-        int anim = animation.getInt(npc) * 1049413981;
-        animation.setAccessible(false);
-        return anim;
-    }
-
-    @SneakyThrows
-    public static String[] getGroundItemActions(ItemComposition item) {
-        List<Field> fields = Arrays.stream(item.getClass().getFields()).filter(x -> x.getType().isArray()).collect(Collectors.toList());
-        for (Field field : fields) {
-            if (field.getType().getComponentType().getName().equals("java.lang.String")) {
-                String[] actions = (String[]) field.get(item);
-                if (Arrays.stream(actions).anyMatch(x -> x != null && x.equalsIgnoreCase("take"))) {
-                    field.setAccessible(true);
-                    return actions;
-                }
-            }
-        }
-        return new String[]{};
-    }
-
-    @SneakyThrows
-    public static void setItemId(MenuEntry menuEntry, int itemId) throws IllegalAccessException, InvocationTargetException {
-        Arrays.stream(menuEntry.getClass().getMethods())
-                .filter(x -> x.getReturnType().getName().equals("void") && x.getParameters().length > 0 && x.getParameters()[0].getType().getName().equals("int"))
-                .collect(Collectors.toList())
-                .get(0)
-                .invoke(menuEntry, itemId); //use the setItemId method through reflection
-    }
-
-
-    @SneakyThrows
-    public static ArrayList<Integer> getObjectByName(String[] names, boolean exact) {
-        ArrayList<Integer> objectIds = new ArrayList<Integer>();
-        Field[] fields = ObjectID.class.getDeclaredFields();
-        for (Field field : fields) {
-            field.setAccessible(true);
-
-            if (field.getType() == int.class) {
-                int fieldValue = field.getInt(null);
-
-                if (exact)
-                    if (Arrays.stream(names).noneMatch(name -> field.getName().equalsIgnoreCase(name)))
-                        continue;
-
-                if (!exact)
-                    if (Arrays.stream(names).noneMatch(name -> field.getName().toLowerCase().contains(name.toLowerCase())))
-                        continue;
-
-                objectIds.add(fieldValue);
-            }
-        }
-        return objectIds;
-    }
-
-    @SneakyThrows
-    public static ArrayList<Integer> getObjectByName(String name, boolean exact) {
-        return getObjectByName(new String[]{name}, exact);
-    }
-
-    @SneakyThrows
-    public static void invokeMenu(int param0, int param1, int opcode, int identifier, int itemId, String option, String target, int x,
-                              int y) {
-        if (doAction == null) {
-            doAction = Arrays.stream(Microbot.getClient().getClass().getDeclaredMethods())
-                    .filter(m -> m.getReturnType().getName().equals("void") && m.getParameters().length == 9 && Arrays.stream(m.getParameters())
-                            .anyMatch(p -> p.getType() == String.class))
-                    .findFirst()
-                    .orElse(null);
-
-            if (doAction == null) {
-                Microbot.showMessage("InvokeMenuAction method is broken!");
-                return;
+                MENU_CLASS_NAME = aClass.getSimpleName();
+                MENU_METHOD_NAME = declaredMethod.getName();
             }
         }
 
-        doAction.setAccessible(true);
-        Microbot.getClientThread().runOnClientThread(() -> doAction.invoke(null, param0, param1, opcode, identifier, itemId, option, target, x, y));
-        if (Microbot.getClient().getKeyboardIdleTicks() > Random.random(5000, 10000)) {
-            Rs2Keyboard.keyPress(KeyEvent.VK_BACK_SPACE);
-        }
-        System.out.println("[INVOKE] => param0: " + param0 + " param1: " + param1 + " opcode: " + opcode + " id: " + identifier + " itemid: " + itemId);
-        doAction.setAccessible(false);
     }
+
+    public static void logClassNames () {
+        System.out.println("Current decrypted class name: " + MENU_CLASS_NAME);
+        System.out.println("Current decrypted method name: " + MENU_METHOD_NAME);
+    }
+
+    private static Class<?> getClass(String className)
+    {
+        Class<?> classInstance;
+
+        try
+        {
+            classInstance = client.getClass().getClassLoader().loadClass(className);
+        }
+        catch (Exception e)
+        {
+            sendGameErrorMessage("Unable to load class \"" + className);
+            return null;
+        }
+
+        return classInstance;
+    }
+
+    private static Field getField(Class<?> classInstance, String fieldName)
+    {
+        Field field;
+
+        if (classInstance == null)
+        {
+            sendGameErrorMessage("class instance is null when trying to get field " + fieldName);
+            return null;
+        }
+
+        try
+        {
+            field = classInstance.getDeclaredField(fieldName);
+        }
+        catch (Exception e)
+        {
+
+            sendGameErrorMessage("Unable to get field " + fieldName);
+            return null;
+        }
+
+        return field;
+    }
+
+
+    public static void invokeMenu(int param0, int param1, int opcode, int identifier, int itemId, int worldViewId, String option, String target, int x, int y) {
+        Class<?> instance = getClass(MENU_CLASS_NAME);
+        Method method;
+        if (instance == null)
+        {
+            return;
+        }
+
+        try {
+            // Fetching method
+            method = instance.getDeclaredMethod(MENU_METHOD_NAME, int.class, int.class, int.class, int.class, int.class, int.class, String.class, String.class,
+                    int.class, int.class, byte.class);
+
+        }
+        catch (Exception e)
+        {
+            sendGameErrorMessage("obfuscated names outdated");
+            return;
+        }
+
+        clientThread.invoke(() -> {
+            try {
+                method.setAccessible(true);
+                method.invoke(null, param0, param1, opcode, identifier, itemId, worldViewId, option, target, x, y, (byte) 25);
+                method.setAccessible(false);
+            }
+            catch (Exception e)
+            {
+                sendGameErrorMessage("Unable to invoke the method invokeMenuAction.");
+            }
+        });
+    }
+
+    public static void invokeMenuAction(int param0, int param1, int opcode, int identifier, int itemId, String option, String target)
+    {
+        invokeMenu(param0, param1, opcode, identifier, itemId, -1, option, target, -1, -1);
+    }
+
+
+
+    public static void invokeMenuAction(int param0, int param1, int opcode, int identifier, int itemId)
+    {
+        invokeMenu(param0, param1, opcode, identifier, itemId, -1, "", "", -1, -1);
+    }
+
+
+
 }

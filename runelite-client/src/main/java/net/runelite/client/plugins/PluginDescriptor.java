@@ -34,6 +34,7 @@ public @interface PluginDescriptor {
     public String Mocrosoft = "<html>[<font color=#b8f704M>M</font>] ";
     public String OG = "<html>[<font color=#FF69B4>O</font>] ";
     public String Default = "<html>[<font color=green>D</font>] ";
+    public String Pumster = "<html>[<font color=#03ff4e>P</font>] ";
     public String SaCo = "<html>[<font color=#0d937b>S</font>] ";
     public String Bank = "<html>[<font color=#9900ff>B</font>] ";
     public String Forn = "<html>[<font color=#AF2B1E>F</font>] ";

@@ -10,7 +10,7 @@ import net.runelite.client.plugins.microbot.util.camera.Rs2Camera;
 import net.runelite.client.plugins.microbot.util.keyboard.Rs2Keyboard;
 import net.runelite.client.plugins.microbot.util.menu.NewMenuEntry;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
-import net.runelite.client.plugins.microbot.util.reflection.Rs2Reflection;
+import net.runelite.client.plugins.microbot.util.reflection.Rs2LegacyReflection;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
 
 import javax.annotation.Nullable;
@@ -449,7 +449,7 @@ public class Rs2GameObject {
     public static GameObject findBank() {
         List<GameObject> gameObjects = getGameObjects();
 
-        ArrayList<Integer> possibleBankIds = Rs2Reflection.getObjectByName(new String[]{"bank_booth"}, false);
+        ArrayList<Integer> possibleBankIds = Rs2LegacyReflection.getObjectByName(new String[]{"bank_booth"}, false);
 
         for (GameObject gameObject : gameObjects) {
             if (possibleBankIds.stream().noneMatch(x -> x == gameObject.getId())) continue;
@@ -474,7 +474,7 @@ public class Rs2GameObject {
     public static GameObject findChest() {
         List<GameObject> gameObjects = getGameObjects();
 
-        ArrayList<Integer> possibleBankIds = Rs2Reflection.getObjectByName(new String[]{"chest"}, false);
+        ArrayList<Integer> possibleBankIds = Rs2LegacyReflection.getObjectByName(new String[]{"chest"}, false);
 
         for (GameObject gameObject : gameObjects) {
             if (possibleBankIds.stream().noneMatch(x -> x == gameObject.getId())) continue;
