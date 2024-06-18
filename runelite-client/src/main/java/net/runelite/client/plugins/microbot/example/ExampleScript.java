@@ -1,5 +1,6 @@
 package net.runelite.client.plugins.microbot.example;
 
+import net.runelite.api.NPC;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.pumstersreflection.methods.InventoryInteractions;
@@ -20,6 +21,7 @@ public class ExampleScript extends Script {
                 if (!Microbot.isLoggedIn()) return;
                 if (!super.run()) return;
                 long startTime = System.currentTimeMillis();
+
 
                 long endTime = System.currentTimeMillis();
                 long totalTime = endTime - startTime;

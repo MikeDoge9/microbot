@@ -6,6 +6,6 @@ import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
 public class Rs2ReflectionNpcInteractions {
 
     public static void attack (NPC  npc) {
-        Rs2Npc.attack()
+
     }
 }
