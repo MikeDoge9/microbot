@@ -20,7 +20,7 @@ import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.keyboard.Rs2Keyboard;
 import net.runelite.client.plugins.microbot.util.math.Random;
 import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
-import net.runelite.client.plugins.microbot.util.reflection.Rs2Reflection;
+import net.runelite.client.plugins.microbot.util.reflection.Rs2LegacyReflection;
 import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
 import net.runelite.client.ui.overlay.OverlayManager;
 
@@ -153,8 +153,8 @@ public class GildedAltarPlugin extends Plugin {
     }
 
     public void leaveHouse() {
-        Rs2Reflection.invokeMenu(-1, 7602207, CC_OP.getId(), 1, -1, "House Option", "", -1, -1);
-        Rs2Reflection.invokeMenu(-1, 24248341, CC_OP.getId(), 1, -1, "Leave House", "", -1, -1);
+        Rs2LegacyReflection.invokeMenu(-1, 7602207, CC_OP.getId(), 1, -1, "House Option", "", -1, -1);
+        Rs2LegacyReflection.invokeMenu(-1, 24248341, CC_OP.getId(), 1, -1, "Leave House", "", -1, -1);
         setSkipTicks(4);
     }
 
@@ -191,7 +191,7 @@ public class GildedAltarPlugin extends Plugin {
         }
 
         if (playerHouse != null) {
-            Rs2Reflection.invokeMenu(playerHouse.getIndex(), 3407891, CC_OP.getId(), 1, -1,
+            Rs2LegacyReflection.invokeMenu(playerHouse.getIndex(), 3407891, CC_OP.getId(), 1, -1,
                     "", "", (int) playerHouse.getBounds().getCenterX(), (int) playerHouse.getBounds().getCenterY());
             setSkipTicks(2);
         }

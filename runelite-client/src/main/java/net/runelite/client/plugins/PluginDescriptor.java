@@ -38,6 +38,8 @@ public @interface PluginDescriptor {
     String Bank = "<html>[<font color=#9900ff>B</font>] ";
     String Forn = "<html>[<font color=#AF2B1E>F</font>] ";
     String See1Duck = "<html>[<font color=#ffff1a>\uD83E\uDD86</font>] ";
+    String Pumster = "<html>[<font color=#03ff4e>P</font>] ";
+
 
     String Lucid = "<html>[<font color=#32CD32>L</font>] ";
 
