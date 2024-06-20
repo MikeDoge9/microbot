@@ -73,6 +73,7 @@ public class Rs2Reflection {
         return classInstance;
     }
 
+
     private static Field getField(Class<?> classInstance, String fieldName)
     {
         Field field;
@@ -96,6 +97,13 @@ public class Rs2Reflection {
 
         return field;
     }
+
+    public static Field getField(String className, String fieldName)
+    {
+        Class<?> clazz = getClass(className);
+        return getField(clazz, fieldName);
+    }
+
 
 
     public static void invokeMenu(int param0, int param1, int opcode, int identifier, int itemId, int worldViewId, String option, String target, int x, int y) {
