@@ -98,6 +98,17 @@ public class Rs2Reflection {
         return field;
     }
 
+    @SneakyThrows
+    public static void setItemId(MenuEntry menuEntry, int itemId) throws IllegalAccessException, InvocationTargetException {
+        var list =  Arrays.stream(menuEntry.getClass().getMethods())
+                .filter(x -> x.getName().equals("setItemId"))
+                .collect(Collectors.toList());
+
+         list.get(0)
+                .invoke(menuEntry, itemId); //use the setItemId method through reflection
+      
+    }
+  
     public static Field getField(String className, String fieldName)
     {
         Class<?> clazz = getClass(className);
