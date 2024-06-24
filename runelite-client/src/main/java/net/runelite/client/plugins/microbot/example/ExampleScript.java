@@ -1,13 +1,18 @@
 package net.runelite.client.plugins.microbot.example;
 
+import net.runelite.api.NPC;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
+import net.runelite.client.plugins.microbot.pumstersreflection.methods.InventoryInteractions;
+import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
+import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 
 import java.util.concurrent.TimeUnit;
 
-
 public class ExampleScript extends Script {
     public static double version = 1.0;
+
+    private boolean runned = false;
 
     public boolean run(ExampleConfig config) {
         Microbot.enableAutoRunOn = false;
@@ -17,7 +22,6 @@ public class ExampleScript extends Script {
                 if (!super.run()) return;
                 long startTime = System.currentTimeMillis();
 
-                //CODE HERE
 
                 long endTime = System.currentTimeMillis();
                 long totalTime = endTime - startTime;

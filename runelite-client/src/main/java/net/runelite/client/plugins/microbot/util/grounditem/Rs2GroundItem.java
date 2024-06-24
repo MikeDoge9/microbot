@@ -13,7 +13,7 @@ import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.menu.NewMenuEntry;
 import net.runelite.client.plugins.microbot.util.models.RS2Item;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
-import net.runelite.client.plugins.microbot.util.reflection.Rs2Reflection;
+import net.runelite.client.plugins.microbot.util.reflection.Rs2LegacyReflection;
 
 import java.awt.*;
 import java.time.Instant;
@@ -71,7 +71,7 @@ public class Rs2GroundItem {
             param1 = localPoint.getSceneY();
             option = action;
 
-            String[] groundActions = Rs2Reflection.getGroundItemActions(item);
+            String[] groundActions = Rs2LegacyReflection.getGroundItemActions(item);
 
             int index = -1;
             for (int i = 0; i < groundActions.length; i++) {
