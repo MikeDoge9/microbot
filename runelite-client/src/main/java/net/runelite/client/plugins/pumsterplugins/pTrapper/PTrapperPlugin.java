@@ -115,7 +115,7 @@ public class PTrapperPlugin  extends Plugin {
 //        }
 
 
-        GameObject trap = Rs2GameObject.findObject("Young tree", true, config.maxDist(), startingLocation);
+        GameObject trap = Rs2GameObject.findObject("Young tree", true, config.maxDist(), false, startingLocation);
 
 //        if (trap != null) {
 //            final ObjectComposition finalTrap = Rs2GameObject.findObjectComposition(trap.getId());

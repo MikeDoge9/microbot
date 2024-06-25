@@ -2,15 +2,19 @@ package net.runelite.client.plugins.microbot.util.reflection;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import net.runelite.api.Client;
+import net.runelite.api.MenuEntry;
 import net.runelite.client.RuneLite;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.plugins.microbot.Microbot;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 import static net.runelite.client.plugins.microbot.util.reflection.utils.Rs2ReflectionUtils.sendGameErrorMessage;
 
@@ -106,7 +110,7 @@ public class Rs2Reflection {
 
          list.get(0)
                 .invoke(menuEntry, itemId); //use the setItemId method through reflection
-      
+
     }
   
     public static Field getField(String className, String fieldName)

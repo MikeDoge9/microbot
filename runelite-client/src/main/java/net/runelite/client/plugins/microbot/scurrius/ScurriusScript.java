@@ -76,7 +76,7 @@ public class ScurriusScript extends Script {
                             Rs2Bank.useBank();
                         }
                         if (Rs2Bank.isOpen()) {
-                            Rs2Bank.withdrawX(true, "shark", 20);
+                            Rs2Bank.withdrawX(true, "lobster", 20);
                             Rs2Bank.withdrawX(true,"prayer potion(3)", 2);
                             Rs2Bank.withdrawX(true, "varrock teleport", 1);
                         }
