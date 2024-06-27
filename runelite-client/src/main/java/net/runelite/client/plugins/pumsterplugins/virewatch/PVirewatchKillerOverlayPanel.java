@@ -33,9 +33,11 @@ public class PVirewatchKillerOverlayPanel extends OverlayPanel {
         try {
             panelComponent.setPreferredSize(new Dimension(200, 300));
             panelComponent.getChildren().add(TitleComponent.builder()
-                    .text("Pumsters Virewatch" + PVirewatchKillerPlugin.version)
+                    .text("Pumsters Vyrewatch " + PVirewatchKillerPlugin.version)
                     .color(Color.GREEN)
                     .build());
+
+            panelComponent.getChildren().add(LineComponent.builder().build());
 
             String check = plugin.startingLocation != null ? "\u2713" : "\u2717";
             panelComponent.getChildren().add(LineComponent.builder()
@@ -45,21 +47,56 @@ public class PVirewatchKillerOverlayPanel extends OverlayPanel {
                     .rightColor(plugin.startingLocation != null ? Color.GREEN : Color.RED)
                     .build());
 
+            String check4 = plugin.fightArea != null ? "\u2713" : "\u2717";
             panelComponent.getChildren().add(LineComponent.builder()
-                    .left("Counted ticks when not in combat")
+                    .left("Fight area set")
+                    .right(check4)
+                    .rightFont(FontManager.getDefaultFont())
+                    .rightColor(plugin.fightArea != null ? Color.GREEN : Color.RED)
+                    .build());
+
+
+            String check2 = script.rechargingPrayer ? "\u2713" : "\u2717";
+            panelComponent.getChildren().add(LineComponent.builder()
+                    .left("Recharging prayer")
+                    .right(check2)
+                    .rightFont(FontManager.getDefaultFont())
+                    .rightColor(script.rechargingPrayer ? Color.GREEN : Color.RED)
+                    .build());
+
+
+            String check3 = config.alchItems() ? "\u2713" : "\u2717";
+            panelComponent.getChildren().add(LineComponent.builder()
+                    .left("Alching drops")
+                    .right(check3)
+                    .rightFont(FontManager.getDefaultFont())
+                    .rightColor(config.alchItems() ? Color.GREEN : Color.RED)
+                    .build());
+
+            panelComponent.getChildren().add(LineComponent.builder()
+                    .left("Ticks not in combat")
                     .right(String.valueOf(plugin.countedTicks))
-                    .rightFont(FontManager.getDefaultFont())
                     .rightColor(Color.RED)
                     .build());
 
             panelComponent.getChildren().add(LineComponent.builder()
-                    .left("Attackble NPC's")
-                    .right(String.valueOf(script.attackableNpcs.size()))
-                    .rightFont(FontManager.getDefaultFont())
+                    .left("Ticks out of area")
+                    .right(String.valueOf(plugin.ticksOutOfArea))
                     .rightColor(Color.RED)
                     .build());
 
-            panelComponent.getChildren().add(LineComponent.builder().build());
+            panelComponent.getChildren().add(LineComponent.builder()
+                    .left("Pray style")
+                    .right(config.prayStyle().getName())
+                    .rightColor(Color.CYAN)
+                    .build());
+
+            panelComponent.getChildren().add(LineComponent.builder()
+                    .left("Profit")
+                    .right(plugin.getTotalItemValue())
+                    .rightColor(Color.GREEN)
+                    .build());
+
 
             panelComponent.getChildren().add(LineComponent.builder()
                     .left(Microbot.status)

@@ -4,8 +4,10 @@ import net.runelite.api.Client;
 import net.runelite.api.Perspective;
 import net.runelite.api.TileObject;
 import net.runelite.api.coords.LocalPoint;
+import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
+import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPosition;
@@ -14,6 +16,7 @@ import net.runelite.client.ui.overlay.outline.ModelOutlineRenderer;
 
 import javax.inject.Inject;
 import java.awt.*;
+import java.util.stream.Collectors;
 
 import static net.runelite.client.plugins.microbot.playerassist.combat.AttackNpcScript.attackableNpcs;
 import static net.runelite.client.ui.overlay.OverlayUtil.renderPolygon;
@@ -54,6 +57,18 @@ public class PVirewatchKillerOverlay extends Overlay {
             renderOutline(graphics, alterStatue);
         }
 
+        if (plugin.fightArea != null)
+        {
+            for (int x = plugin.fightArea .getX(); x < plugin.fightArea .getX() + plugin.fightArea .getWidth(); x++)
+            {
+                for (int y = plugin.fightArea .getY(); y < plugin.fightArea .getY() + plugin.fightArea .getHeight(); y++)
+                {
+                    WorldPoint worldPoint = new WorldPoint(x, y, plugin.fightArea .getPlane());
+                    drawTile(graphics, worldPoint, Color.YELLOW);
+                }
+            }
+        }
+
         // render start location
         if(plugin.startingLocation != null) {
             LocalPoint startTile = LocalPoint.fromWorld(Microbot.getClient(), plugin.startingLocation);
@@ -66,8 +81,7 @@ public class PVirewatchKillerOverlay extends Overlay {
         }
 
 
-        for (net.runelite.api.NPC npc :
-                script.attackableNpcs) {
+        for (net.runelite.api.NPC npc : Rs2Npc.getAttackableNpcs("Vyrewatch Sentinel").collect(Collectors.toList())) {
             if (npc != null && npc.getCanvasTilePoly() != null) {
                 try {
                     graphics.setColor(Color.MAGENTA);
@@ -78,18 +92,21 @@ public class PVirewatchKillerOverlay extends Overlay {
                 }
             }
         }
+        return null;
+    }
 
-        // Render the radius arround the player
-        LocalPoint lp = LocalPoint.fromWorld(Microbot.getClient(), client.getLocalPlayer().getWorldLocation());
-        if (lp != null) {
-            Polygon poly = Perspective.getCanvasTileAreaPoly(Microbot.getClient(), lp, config.radius());
-
-            if (poly != null) {
-                renderPolygon(graphics, poly, Color.CYAN);
+    private void drawTile(Graphics2D graphics, WorldPoint point, Color color)
+    {
+        LocalPoint localPoint = LocalPoint.fromWorld(client, point);
+        if (localPoint != null)
+        {
+            Polygon poly = Perspective.getCanvasTilePoly(client, localPoint);
+            if (poly != null)
+            {
+                graphics.setColor(color);
+                graphics.draw(poly);
             }
         }
-
-        return null;
     }
 
     private void renderOutline(TileObject gameObject)
