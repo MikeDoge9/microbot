@@ -22,6 +22,8 @@ public class PLooter extends Script {
             if (!config.toggleLootItems()) return;
 
             lootItemsByValue(config);
+            // Normal looter also does this but its better to have it as an extra priority
+            lootItemByName(config, "Blood shard");
             if(config.lootRunes()) lootItemByName(config, "rune");
             if(config.lootCoins()) lootItemByName(config, "coins");
 

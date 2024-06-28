@@ -52,25 +52,22 @@ public class PVirewatchKillerOverlay extends Overlay {
 
         alterStatue = Rs2GameObject.findObjectById(39234);
 
-        if(alterStatue != null) {
+        if (alterStatue != null && !config.disableStatueOutline()) {
             renderOutline(alterStatue);
             renderOutline(graphics, alterStatue);
         }
 
-        if (plugin.fightArea != null)
-        {
-            for (int x = plugin.fightArea .getX(); x < plugin.fightArea .getX() + plugin.fightArea .getWidth(); x++)
-            {
-                for (int y = plugin.fightArea .getY(); y < plugin.fightArea .getY() + plugin.fightArea .getHeight(); y++)
-                {
-                    WorldPoint worldPoint = new WorldPoint(x, y, plugin.fightArea .getPlane());
+        if (plugin.fightArea != null && !config.disableFightArea()) {
+            for (int x = plugin.fightArea.getX(); x < plugin.fightArea.getX() + plugin.fightArea.getWidth(); x++) {
+                for (int y = plugin.fightArea.getY(); y < plugin.fightArea.getY() + plugin.fightArea.getHeight(); y++) {
+                    WorldPoint worldPoint = new WorldPoint(x, y, plugin.fightArea.getPlane());
                     drawTile(graphics, worldPoint, Color.YELLOW);
                 }
             }
         }
 
         // render start location
-        if(plugin.startingLocation != null) {
+        if (plugin.startingLocation != null) {
             LocalPoint startTile = LocalPoint.fromWorld(Microbot.getClient(), plugin.startingLocation);
             if (startTile != null) {
                 Polygon safeSpotPoly = Perspective.getCanvasTileAreaPoly(Microbot.getClient(), startTile, 1);
@@ -80,18 +77,21 @@ public class PVirewatchKillerOverlay extends Overlay {
             }
         }
 
+        if (!config.disableNPCOutline()) {
+            for (net.runelite.api.NPC npc : Rs2Npc.getAttackableNpcs("Vyrewatch Sentinel").collect(Collectors.toList())) {
+                if (npc != null && npc.getCanvasTilePoly() != null) {
+                    if (!plugin.fightArea.contains(npc.getWorldLocation())) continue;
 
-        for (net.runelite.api.NPC npc : Rs2Npc.getAttackableNpcs("Vyrewatch Sentinel").collect(Collectors.toList())) {
-            if (npc != null && npc.getCanvasTilePoly() != null) {
-                try {
-                    graphics.setColor(Color.MAGENTA);
-                    modelOutlineRenderer.drawOutline(npc, 2, Color.MAGENTA, 4);
-                    graphics.draw(npc.getCanvasTilePoly());
-                } catch (Exception ex) {
-                    System.out.println(ex.getMessage());
+                    try {
+                        modelOutlineRenderer.drawOutline(npc, 2, Color.ORANGE, 4);
+                        graphics.draw(npc.getCanvasTilePoly());
+                    } catch (Exception ex) {
+                        System.out.println(ex.getMessage());
+                    }
                 }
             }
         }
+
         return null;
     }
 

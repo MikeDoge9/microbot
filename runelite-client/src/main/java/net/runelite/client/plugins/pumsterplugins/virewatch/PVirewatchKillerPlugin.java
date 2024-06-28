@@ -40,7 +40,7 @@ import java.util.Map;
 )
 public class PVirewatchKillerPlugin extends Plugin {
 
-    public static String version = "0.1";
+    public static String version = "1.0";
 
     private PLooter looterScript = new PLooter();
     private PAlcher alchScript = new PAlcher();
@@ -61,6 +61,12 @@ public class PVirewatchKillerPlugin extends Plugin {
     @Inject
     private  PVirewatchScript script;
 
+
+    public boolean alchingDrop = false;
+
+    public int alchedItems = 0;
+
+    public boolean rechargingPrayer = false;
     public WorldArea fightArea;
 
     public PVirewatchKillerPlugin() {
@@ -105,14 +111,14 @@ public class PVirewatchKillerPlugin extends Plugin {
     private void onGameTick(GameTick event) {
         if (Rs2Combat.inCombat()) {
             countedTicks = 0;
-        } else if (!script.rechargingPrayer) {
+        } else if (!plugin.rechargingPrayer) {
             countedTicks++;
         }
 
         if(fightArea != null) {
             if(fightArea.contains(Microbot.getClient().getLocalPlayer().getWorldLocation())) {
                 ticksOutOfArea = 0;
-            } else if (!script.rechargingPrayer) {
+            } else if (!plugin.rechargingPrayer) {
                 ticksOutOfArea++;
             }
 }
@@ -153,6 +159,8 @@ public class PVirewatchKillerPlugin extends Plugin {
     {
         if (event.getContainerId() == Microbot.getClient().getItemContainer(InventoryID.INVENTORY).getId())
         {
+            if(alchingDrop) return;
+
             Map<Integer, Integer> currentInventory = new HashMap<>();
             for (Item item : event.getItemContainer().getItems())
             {
@@ -226,7 +234,7 @@ public class PVirewatchKillerPlugin extends Plugin {
 
         }
         script.run(config, plugin);
-        alchScript.run(config);
+        alchScript.run(config, plugin);
         looterScript.run(config);
 
         previousInventory.clear();
@@ -243,6 +251,9 @@ public class PVirewatchKillerPlugin extends Plugin {
         overlayManager.remove(overlay);
         overlayManager.remove(infoOverlay);
         startingLocation = null;
+        fightArea = null;
+        ticksOutOfArea = 0;
         countedTicks = 0;
+        alchedItems = 0;
     }
 }

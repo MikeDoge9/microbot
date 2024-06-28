@@ -9,6 +9,17 @@ import net.runelite.client.plugins.pumsterplugins.virewatch.models.PRAY_STYLE;
 
 @ConfigGroup("PVireKillerConfig")
 public interface PVirewatchKillerConfig extends Config {
+
+    @ConfigItem(
+            keyName = "guide",
+            name = "How to use",
+            description = "How to use this plugin",
+            position = 0
+    )
+    default String GUIDE() {
+        return "Read the description of the settings for more information. Start with inventory and gear setup near the prayer statue and configure the settings. \n HAVE AUTO RETALIATE ON!" ;
+    }
+
     @ConfigItem(
             keyName = "killRadius",
             name = "Tile Radius",
@@ -22,7 +33,7 @@ public interface PVirewatchKillerConfig extends Config {
 
     @ConfigItem(
             keyName = "prayStyle",
-            name = "Prayer style",
+            name = "Pray style",
             description = "Normal prayers are using the interface quick-prayers use the quick prayer orb to turn on prayer",
             position = 2,
             section = combatSection
@@ -98,6 +109,14 @@ public interface PVirewatchKillerConfig extends Config {
             closedByDefault = false
     )
     String tickSection = "Ticks";
+
+    @ConfigSection(
+            name = "Performance",
+            description = "Performance",
+            position = 5,
+            closedByDefault = true
+    )
+    String performanceSection = "Performance";
 
     @ConfigItem(
             keyName = "Loot items",
@@ -212,6 +231,39 @@ public interface PVirewatchKillerConfig extends Config {
     )
     default int tickToReturnCombat() {
         return 25;
+    }
+
+    @ConfigItem(
+            keyName = "disableAreaRender",
+            name = "Disable fight area render",
+            description = "Disables the fight are tile drawing",
+            position = 1,
+            section = performanceSection
+    )
+    default boolean disableFightArea() {
+        return false;
+    }
+
+    @ConfigItem(
+            keyName = "disableStatueOutline",
+            name = "Disable statue outline",
+            description = "Disables the statue drawing outline!",
+            position = 2,
+            section = performanceSection
+    )
+    default boolean disableStatueOutline() {
+        return false;
+    }
+
+    @ConfigItem(
+            keyName = "disableNpcOutline",
+            name = "Disable NPC outline",
+            description = "Disables the NPC drawing outline!",
+            position = 3,
+            section = performanceSection
+    )
+    default boolean disableNPCOutline() {
+        return false;
     }
 
 }

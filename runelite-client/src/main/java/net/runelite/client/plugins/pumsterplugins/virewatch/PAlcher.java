@@ -3,16 +3,24 @@ package net.runelite.client.plugins.pumsterplugins.virewatch;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.example.ExampleConfig;
+import net.runelite.client.plugins.microbot.util.dialogues.Rs2Dialogue;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
+import net.runelite.client.plugins.microbot.util.keyboard.Rs2Keyboard;
 import net.runelite.client.plugins.microbot.util.magic.Rs2Magic;
+import net.runelite.client.plugins.microbot.util.tabs.Rs2Tab;
+import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
 
+import java.awt.event.KeyEvent;
 import java.util.concurrent.TimeUnit;
 
 public class PAlcher extends Script {
 
-    public boolean run(PVirewatchKillerConfig config) {
+    PVirewatchKillerPlugin plugin;
+
+    public boolean run(PVirewatchKillerConfig config, PVirewatchKillerPlugin plugin) {
         Microbot.enableAutoRunOn = false;
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
+            this.plugin = plugin;
             try {
                 if (!Microbot.isLoggedIn()) return;
                 if (!super.run()) return;
@@ -20,20 +28,16 @@ public class PAlcher extends Script {
 
                 if(Rs2Inventory.contains("Nature rune", "Fire rune")) {
                     if(Rs2Inventory.contains("Rune dagger")) {
-                        Rs2Magic.alch("Rune dagger");
-                        sleep(400,600);
+                        alchItem("Rune dagger");
                     } else if (Rs2Inventory.contains("Adamant platelegs")) {
-                        Rs2Magic.alch("Adamant platelegs");
-                        sleep(400,600);
+                        alchItem("Adamant platelegs");
                     } else if (Rs2Inventory.contains("Adamant platebody")) {
-                        Rs2Magic.alch("Adamant platebody");
-                        sleep(400,600);
+                        alchItem("Adamant platebody");
                     } else if (Rs2Inventory.contains("Rune full helm")) {
-                        Rs2Magic.alch("Rune full helm");
-                        sleep(400,600);
+                        alchItem("Rune full helm");
                     } else if (Rs2Inventory.contains("Rune kiteshield")) {
-                        Rs2Magic.alch("Rune kiteshield");
-                        sleep(400,600);
+                        //alchItemWithConfirm("Rune kiteshield");
+
                     }
 
                 }
@@ -46,6 +50,28 @@ public class PAlcher extends Script {
         return true;
     }
 
+    private void alchItem(String item) {
+        plugin.alchedItems++;
+        plugin.alchingDrop = true;
+        Rs2Magic.alch(item);
+        sleepUntil(() -> !Rs2Inventory.contains(item));
+        plugin.alchingDrop = false;
+        Rs2Tab.switchToInventoryTab();
+
+    }
+
+    // Does not work yet
+    private void alchItemWithConfirm(String item) {
+        plugin.alchedItems++;
+        plugin.alchingDrop = true;
+        Rs2Magic.alch(item);
+        Rs2Widget.sleepUntilHasWidget("Really cast High");
+        Rs2Keyboard.keyPress(KeyEvent.VK_SPACE);
+        sleep(300);
+        Rs2Keyboard.keyPress(KeyEvent.VK_1);
+        plugin.alchingDrop = false;
+        Rs2Tab.switchToInventoryTab();
+    }
     @Override
     public void shutdown() {
         super.shutdown();
