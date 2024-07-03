@@ -23,7 +23,7 @@ public class PLooter extends Script {
 
             lootItemsByValue(config);
             // Normal looter also does this but its better to have it as an extra priority
-            lootItemByName(config, "Blood shard");
+            lootItemByName(config, "Blood shard", true);
             if(config.lootRunes()) lootItemByName(config, "rune");
             if(config.lootCoins()) lootItemByName(config, "coins");
 
@@ -39,6 +39,22 @@ public class PLooter extends Script {
                 5,
                 1,
                 config.toggleDelayedLooting(),
+                config.toggleOnlyLootMyItems(),
+                name
+        );
+        if (Rs2GroundItem.lootItemsBasedOnNames(runeParams)) {
+            Microbot.pauseAllScripts = false;
+        }
+
+    }
+
+    private void lootItemByName(PVirewatchKillerConfig config, String name, boolean forceSteal) {
+        LootingParameters runeParams = new LootingParameters(
+                config.radius(),
+                1,
+                5,
+                1,
+                forceSteal,
                 config.toggleOnlyLootMyItems(),
                 name
         );
